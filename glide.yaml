@@ -1,0 +1,10 @@
+package: github.com/InvincibleMan/anzu-chain
+import:
+- package: github.com/Masterminds/squirrel
+- package: github.com/garyburd/redigo
+  subpackages:
+  - redis
+- package: github.com/gin-gonic/gin
+- package: github.com/kelseyhightower/envconfig
+- package: github.com/mattn/go-sqlite3
+- package: github.com/satori/go.uuid

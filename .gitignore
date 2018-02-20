@@ -1,0 +1,8 @@
+db/
+*.log
+anzu-chain
+dump.*
+vendor/
+bin/
+main
+.idea

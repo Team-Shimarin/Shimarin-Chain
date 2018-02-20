@@ -1,0 +1,49 @@
+hash: 2c7b0c2826d6144625c56fa6726b2de6d2401e7dc7d2d75029722b90fc3d41f2
+updated: 2018-02-19T20:17:47.024907298+09:00
+imports:
+- name: github.com/garyburd/redigo
+  version: d1ed5c67e5794de818ea85e6b522fda02623a484
+  subpackages:
+  - internal
+  - redis
+- name: github.com/gin-contrib/sse
+  version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
+- name: github.com/gin-gonic/gin
+  version: 783c7ee9c14eac0e65b501664b4f553291556b43
+  subpackages:
+  - binding
+  - json
+  - render
+- name: github.com/golang/protobuf
+  version: bbd03ef6da3a115852eaf24c8a1c46aeb39aa175
+  subpackages:
+  - proto
+- name: github.com/json-iterator/go
+  version: e7c7f3b33712573affdcc7a107218e7926b9a05b
+- name: github.com/kelseyhightower/envconfig
+  version: 462fda1f11d8cad3660e52737b8beefd27acfb3f
+- name: github.com/lann/builder
+  version: 1b87b36280d04fe7882d1512bf038ea2967ad534
+- name: github.com/lann/ps
+  version: 62de8c46ede02a7675c4c79c84883eb164cb71e3
+- name: github.com/Masterminds/squirrel
+  version: f3d8be4a3bca69543a71773c54dc7b44837ba14c
+- name: github.com/mattn/go-isatty
+  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
+- name: github.com/mattn/go-sqlite3
+  version: 696e2e43cb00dcb1acaf6073e01493e3c4197b75
+- name: github.com/satori/go.uuid
+  version: 36e9d2ebbde5e3f13ab2e25625fd453271d6522e
+- name: github.com/ugorji/go
+  version: b5b949564861e43a03568a0b134c135cf318e5c8
+  subpackages:
+  - codec
+- name: golang.org/x/sys
+  version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
+  subpackages:
+  - unix
+- name: gopkg.in/go-playground/validator.v8
+  version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
+- name: gopkg.in/yaml.v2
+  version: d670f9405373e636a5a2765eea47fac0c9bc91a4
+testImports: []

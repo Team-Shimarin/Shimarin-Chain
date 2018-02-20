@@ -23,6 +23,9 @@ func subscribeValidHashEach() {
 	conf := config.GetConfig()
 	// redis connection
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
+	if err != nil {
+		log.Fatalf("Dead subscribe_valid_hash_each Goroutine because %v", err)
+	}
 	defer c.Close()
 	log.Println("subscribeValidHashEach: conected to redis")
 

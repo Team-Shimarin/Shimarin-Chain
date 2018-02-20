@@ -40,6 +40,9 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 	// redis connection
 	conf := config.GetConfig()
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
+	if err != nil {
+		log.Fatalf("Dead HashCalculate Goroutine because %v", err)
+	}
 	defer c.Close()
 	log.Println("HashCalculate: connected to redis")
 	//　1秒毎にハッシュ計算

@@ -1,7 +1,7 @@
 package model
 
 type Health struct {
-	id int
+	id        int
 	accout_id string
-	hp int
+	hp        int
 }

@@ -1,13 +1,11 @@
 package model
 
-import "github.com/NoahOrberg/anzu-chain/model"
-
 type Block struct {
-	PrevHash  string
+	PrevHash string
 	// TODO : Txs の定義が終わり次第修正
 	CreatorID string
 	Timestamp int64
-	MyHash string
+	MyHash    string
 }
 
 const BlockTable = "block"

@@ -12,3 +12,9 @@ run 4 `anzu-node` and  1 `kirarin-shower`.
 
 `kirarin-shower` never have `any permissions` about `anzu-chain`.  
 So, `anzu-chain` is not centralized.  
+
+## ENDPOINT
+
+##### HPの更新
+> /api/v1/account/healthpoint/update
+

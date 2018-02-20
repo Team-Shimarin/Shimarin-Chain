@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/InvincibleMan/anzu-chain/config"
 	"github.com/InvincibleMan/anzu-chain/hash"
 	"github.com/InvincibleMan/anzu-chain/tx"
 	"github.com/garyburd/redigo/redis"
@@ -14,11 +15,12 @@ import (
 
 func ValidHashSubScribe() {
 	log.Println("ValidHashSubScribe: Goutine start")
+	conf := config.GetConfig()
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
 	defer c.Close()
 	log.Println("ValidHashSubScribe: connected to redis")
 	psc := redis.PubSubConn{Conn: c}
-	err := psc.Subscribe(validHashChan)
+	err = psc.Subscribe(validHashChan)
 	if err != nil {
 		log.Println(validHashChan, err)
 	}

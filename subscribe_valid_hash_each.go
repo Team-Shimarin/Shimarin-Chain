@@ -16,10 +16,11 @@ const validHashChan = "validHash"
 const prevTxPoolKey = "prev_TxPool"
 const txPoolKey = "TxPool"
 
-func subscribeValidHashEach(c redis.Conn) {
+func subscribeValidHashEach() {
 	log.Println("subscribeValidHashEach: Goroutine Start")
 	approveCnt := 0
 	rejectCnt := 0
+	conf := config.GetConfig()
 	// redis connection
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
 	defer c.Close()

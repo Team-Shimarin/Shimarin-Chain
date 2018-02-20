@@ -8,6 +8,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/InvincibleMan/anzu-chain/config"
 	"github.com/InvincibleMan/anzu-chain/dba"
 	"github.com/InvincibleMan/anzu-chain/hash"
 	"github.com/InvincibleMan/anzu-chain/tx"
@@ -37,6 +38,7 @@ func getPrevHash() string {
 func HashCalculate(myid string, myhp int64, diff int64) {
 	log.Println("HashCalculate: Goroutine Start")
 	// redis connection
+	conf := config.GetConfig()
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
 	defer c.Close()
 	log.Println("HashCalculate: connected to redis")

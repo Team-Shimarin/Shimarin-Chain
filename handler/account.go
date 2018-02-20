@@ -25,7 +25,7 @@ func NewAccountHandler(conf *config.Config, accountAccess dba.AccountAccess) *Ac
 }
 
 func (a *AccountHandler) Register(c *gin.Context) {
-	publicKey := c.PostForm("publicKey")
+	publicKey := c.Query("publicKey")
 	log.Print("pubkey", publicKey)
 	_, _ = model.NewAccount(publicKey)
 

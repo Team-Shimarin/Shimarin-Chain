@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS health (
+    id int PRIMARY KEY AUTOINCREMENT,
+    accontid VARCHAR(255)
+);

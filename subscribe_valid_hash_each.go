@@ -223,6 +223,10 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 	if txs[len(txs)-1].CreatorID == config.GetConfig().MinorAccountID {
 		// prevもってくる
 		prevPool, err := redis.Bytes(c.Do("GET", prevTxPoolKey))
+		if err == redis.ErrNil {
+			err = nil
+			prevPool = []byte("")
+		}
 		if err != nil {
 			return err
 		}
@@ -232,6 +236,10 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 		}
 		// txpoolもってくる
 		txPool, err := redis.Bytes(c.Do("GET", txPoolKey))
+		if err == redis.ErrNil {
+			err = nil
+			txPool = []byte("")
+		}
 		if err != nil {
 			return err
 		}
@@ -261,7 +269,11 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 
 // RedisからJSONのTxsを取得するFunc
 func getTxsJSON(c redis.Conn) ([]byte, error) {
-	return redis.Bytes(c.Do("GET", prevTxPoolKey))
+	bs, err := redis.Bytes(c.Do("GET", prevTxPoolKey))
+	if err == redis.ErrNil {
+		return []byte(""), nil
+	}
+	return bs, err
 }
 
 // 構造体にするFunc

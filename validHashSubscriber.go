@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/InvincibleMan/anzu-chain/config"
@@ -22,14 +21,17 @@ func ValidHashSubScribe() {
 	psc := redis.PubSubConn{Conn: c}
 	err = psc.Subscribe(validHashChan)
 	if err != nil {
-		log.Println(validHashChan, err)
+		log.Print("error: subscribe ", validHashChan, ":because ", err)
 	}
 	for {
-		log.Println(validHashChan, "connected")
 		switch v := psc.Receive().(type) {
 		case redis.Message:
 			log.Println("validhHashChan get Message ", v.Data)
-			if redis_get(txPoolKey, c) != "" {
+			str, err := redis_get(txPoolKey, c)
+			if err != nil {
+				log.Printf("error: in validHashSubScribe: %v", err)
+			}
+			if str != "" {
 				valid_data := struct {
 					Transaction tx.Tx `json:"tx"`
 					Timestamp   int64 `json:"ts"`
@@ -60,17 +62,20 @@ func ValidHashSubScribe() {
 			} else {
 				continue
 			}
-		case error:
-			log.Println(v)
+		default:
+			log.Printf("error when psc.Receive switch-case in validHashSubScribe: %v", v)
 		}
 	}
 }
 
-func redis_get(key string, c redis.Conn) string {
-	s, err := redis.String(c.Do("GET", key))
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+func redis_get(key string, c redis.Conn) (string, error) {
+	reply, err := c.Do("GET", key)
+	if err != nil || reply == nil {
+		return "", err
 	}
-	return s
+	s, err := redis.String(reply, err)
+	if err != nil {
+		return "", err
+	}
+	return s, nil
 }

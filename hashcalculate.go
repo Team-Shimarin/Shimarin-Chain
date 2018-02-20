@@ -48,6 +48,10 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 	//　1秒毎にハッシュ計算
 	for {
 		all_tx, err := redis.String(c.Do("GET", prevTxPoolKey))
+		if err == redis.ErrNil {
+			all_tx = ""
+			err = nil
+		}
 		if err != nil {
 			log.Fatal(err)
 		}

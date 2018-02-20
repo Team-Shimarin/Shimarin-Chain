@@ -3,7 +3,7 @@ version: "3"
 services:
     anzu-chain-1:
         container_name: anzu1
-        image: invincibleman/anzu-chain:feature-background-redis
+        image: invincibleman/anzu-chain:hotfix-background-redis
         ports:
             - 8081:8080
         depends_on:
@@ -15,7 +15,7 @@ services:
 
     anzu-chain-2:
         container_name: anzu2
-        image: invincibleman/anzu-chain:feature-background-redis
+        image: invincibleman/anzu-chain:hotfix-background-redis
         ports:
             - 8082:8080
         depends_on:
@@ -27,7 +27,7 @@ services:
 
     anzu-chain-3:
         container_name: anzu3
-        image: invincibleman/anzu-chain:feature-background-redis
+        image: invincibleman/anzu-chain:hotfix-background-redis
         ports:
             - 8083:8080
         depends_on:
@@ -39,7 +39,7 @@ services:
 
     anzu-chain-4:
         container_name: anzu4
-        image: invincibleman/anzu-chain:feature-background-redis
+        image: invincibleman/anzu-chain:hotfix-background-redis
         ports:
             - 8084:8080
         depends_on:

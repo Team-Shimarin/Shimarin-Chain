@@ -68,6 +68,7 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 				c.Do("SET", prevTxPoolKey, all_tx)
 				// all_txをあんまーしゃるする
 				jsonAllTx := make([]tx.Tx, 0)
+				log.Print(all_tx)
 				if err := json.Unmarshal([]byte(all_tx), &jsonAllTx); err != nil {
 					log.Fatal(err)
 				}

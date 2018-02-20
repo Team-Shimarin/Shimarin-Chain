@@ -1,8 +1,10 @@
 package model
 
+import "github.com/NoahOrberg/anzu-chain/model"
+
 type Block struct {
 	PrevHash  string
-	Txs       string
+	// TODO : Txs の定義が終わり次第修正
 	CreatorID string
 	Timestamp int64
 	MyHash string

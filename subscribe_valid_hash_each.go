@@ -17,8 +17,13 @@ const prevTxPoolKey = "prev_TxPool"
 const txPoolKey = "TxPool"
 
 func subscribeValidHashEach(c redis.Conn) {
+	log.Println("subscribeValidHashEach: Goroutine Start")
 	approveCnt := 0
 	rejectCnt := 0
+	// redis connection
+	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
+	defer c.Close()
+	log.Println("subscribeValidHashEach: conected to redis")
 
 	psc := redis.PubSubConn{Conn: c}
 	psc.Subscribe(validHashEachChan)

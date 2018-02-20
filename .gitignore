@@ -6,3 +6,4 @@ vendor/
 bin/
 main
 .idea
+redis.go

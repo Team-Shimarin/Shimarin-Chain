@@ -5,29 +5,26 @@ import (
 	"os"
 	"time"
 
+	"log"
+
 	"github.com/InvincibleMan/anzu-chain/config"
 	"github.com/InvincibleMan/anzu-chain/dba"
 	"github.com/InvincibleMan/anzu-chain/handler"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 const (
 	systemId = "system"
 )
 
-func main() {
-	// get config
-	log.Println("Anzu Wake Up")
-	conf := config.GetConfig()
-	// redis connection
+func getRedisConn(host, port string) (redis.Conn, error) {
 	var c redis.Conn
 	var err error
 	for i := 0; i < 200; i++ {
-		c, err = redis.Dial("tcp", conf.RedisHost + ":" + conf.RedisPort)
+		c, err = redis.Dial("tcp", host+":"+port)
 		if err != nil {
-			log.Printf("%s:%s", conf.RedisHost, conf.RedisPort)
+			log.Print(host + ":" + port)
 			log.Printf(err.Error())
 			log.Printf("redis connection: retry cnt %d", i)
 			time.Sleep(1 * time.Second)
@@ -35,7 +32,14 @@ func main() {
 		}
 		break
 	}
-	defer c.Close()
+
+	return c, err
+}
+
+func main() {
+	// get config
+	log.Println("Anzu Wake Up")
+	conf := config.GetConfig()
 
 	r := gin.Default()
 	f, _ := os.Create("anzu-access.log")
@@ -46,10 +50,9 @@ func main() {
 	myhp := int64(100)
 	diff := int64(100)
 
-	go HashCalculate(c, myId, myhp, diff)
-	go ValidHashSubScribe(c)
-	// NOTE: SUBSCRIBE VALID_HASH_EACH
-	go subscribeValidHashEach(c)
+	go HashCalculate(myId, myhp, diff)
+	go ValidHashSubScribe()
+	go subscribeValidHashEach()
 
 	accountHandler := handler.NewAccountHandler(conf, dba.AccountAccess{})
 

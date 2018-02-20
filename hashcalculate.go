@@ -5,12 +5,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/InvincibleMan/anzu-chain/dba"
 	"github.com/InvincibleMan/anzu-chain/hash"
 	"github.com/InvincibleMan/anzu-chain/tx"
 	"github.com/garyburd/redigo/redis"
-	"log"
-	"time"
 )
 
 type ValidHashJSON struct {
@@ -33,8 +34,12 @@ func getPrevHash() string {
 	return prevhash
 }
 
-func HashCalculate(c redis.Conn, myid string, myhp int64, diff int64) {
-	log.Println("Goroutin in HashCalculate")
+func HashCalculate(myid string, myhp int64, diff int64) {
+	log.Println("HashCalculate: Goroutine Start")
+	// redis connection
+	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
+	defer c.Close()
+	log.Println("HashCalculate: connected to redis")
 	//　1秒毎にハッシュ計算
 	for {
 		all_tx, err := redis.String(c.Do("GET", prevTxPoolKey))

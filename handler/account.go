@@ -10,6 +10,9 @@ import (
 	"strconv"
 	"log"
 	"fmt"
+	"github.com/garyburd/redigo/redis"
+	"encoding/json"
+	"time"
 )
 
 type AccountHandler struct {
@@ -26,11 +29,38 @@ func NewAccountHandler(conf *config.Config, accountAccess dba.AccountAccess) *Ac
 
 func (a *AccountHandler) Register(c *gin.Context) {
 	publicKey := c.Query("publicKey")
-	log.Print("pubkey", publicKey)
-	_, _ = model.NewAccount(publicKey)
 
+	conf := config.GetConfig()
+	var rc redis.Conn
+	var err error
+	for i := 0; i < 200; i++ {
+		rc, err = redis.Dial("tcp", conf.RedisHost + ":" + conf.RedisPort)
+		if err != nil {
+			log.Printf("%s:%s", conf.RedisHost, conf.RedisPort)
+			log.Printf(err.Error())
+			log.Printf("redis connection: retry cnt %d", i)
+			time.Sleep(1 * time.Second)
+			continue
+		}
+		break
+	}
+	defer rc.Close()
 	// TODO: RedisのKVSにJSONでぶち込む
+	// {
+	//      "id":id,
+	//      "hp":hp,
+	//}
 
+	data, err := model.NewAccount(publicKey)
+	if err != nil{
+		log.Println(err)
+	}
+	datajson, err := json.Marshal(data)
+	if err != nil{
+		log.Print(err)
+	}
+	rc.Do("SET", publicKey, datajson)
+	log.Println("set public key", publicKey, " ", fmt.Sprint(datajson))
 	c.String(http.StatusOK, "please wait...")
 }
 

@@ -195,7 +195,8 @@ func executeTx(transaction *tx.Tx) error {
 			account := model.Account{
 				c.ID,
 				c.Pubkey,
-				0,
+				initbalance,
+				inithp,
 			}
 			accountaccsess := dba.AccountAccess{}
 			err := accountaccsess.Register(&account)

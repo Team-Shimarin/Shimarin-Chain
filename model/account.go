@@ -6,6 +6,7 @@ type Account struct {
 	ID        string
 	PublicKey string
 	Balance int64
+	HP int64
 }
 
 func NewAccount(pubkey string) (*Account, error) {

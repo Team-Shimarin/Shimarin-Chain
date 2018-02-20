@@ -4,6 +4,8 @@ import (
 	"github.com/InvincibleMan/anzu-chain/model"
 	"github.com/Masterminds/squirrel"
 	sqlite3 "github.com/mattn/go-sqlite3"
+	"github.com/garyburd/redigo/redis"
+	"encoding/json"
 )
 
 type AccountAccess struct{}
@@ -49,6 +51,18 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 		return err
 	}
 	return nil
+}
+
+
+func (a *AccountAccess) GetIDFromRedis(publicKey string, rc redis.Conn)(string, error){
+	// RedisのKVCからAccountIDを取得
+	accontjsonraw, err := redis.String(rc.Do("GET", publicKey))
+	if err != nil{
+		return "", err
+	}
+	var account model.Account
+	json.Unmarshal([]byte(accontjsonraw), account)
+	return account.ID, nil
 }
 
 func (a *AccountAccess) UpdataHP(accountid string, hp int64) error {

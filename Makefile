@@ -2,12 +2,17 @@ cleandb:
 	rm -rf db/sqlite3.db
 
 migrate-up:
-	sqlite3 db/sqlite3.db < migrate/1518922917_accounts.up.sql
-	sqlite3 db/sqlite3.db < migrate/1518948625_block.up.sql
+	if [ ! -d db ]; then mkdir db; fi
+	touch db/sqlite3.db
+	sqlite3 db/sqlite3.db < migrate/account.sql
+	sqlite3 db/sqlite3.db < migrate/block.sql
+	sqlite3 db/sqlite3.db < migrate/tx.sql
 
 migrate-down:
-	sqlite3 db/sqlite3.db < migrate/1518922917_accounts.down.sql
-	sqlite3 db/sqlite3.db < migrate/1518948625_block.down.sql
+	echo "" > db/sqlite3.db
+
+insert-dummy:
+	sqlite3 db/sqlite3.db < migrate/dummy.sql
 
 build:
 	GOOS=linux GOARCH=amd64 go build -o ./bin/anzu-chain *.go

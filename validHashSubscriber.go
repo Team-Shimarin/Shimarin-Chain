@@ -26,7 +26,7 @@ func ValidHashSubScribe() {
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
-			log.Println("validhHashChan get Message ", v.Data)
+			log.Println("validhHashChan get Message ", string(v.Data))
 			str, err := redis_get(txPoolKey, c)
 			if err != nil {
 				log.Printf("error: in validHashSubScribe: %v", err)

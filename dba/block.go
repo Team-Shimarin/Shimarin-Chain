@@ -23,14 +23,14 @@ func (a *BlockAccess) AddBlock(block *model.Block) error {
 func (a *BlockAccess) GetLatestBlock() (*model.Block, error) {
 	sql, args, err := squirrel.Select("*").
 		From(model.BlockTable).
-		Where("timestamp = (SELECT MAX(timetamp) FROM block)").
+		Where("timestamp = (SELECT MAX(timestamp) FROM block)").
 		ToSql()
 	if err != nil {
 		return nil, err
 	}
 
 	block := model.Block{}
-	if err := db.QueryRow(sql, args...).Scan(&block); err != nil {
+	if err := db.QueryRow(sql, args...).Scan(&block.PrevHash, &block.Txs, &block.CreatorID, &block.Timestamp); err != nil {
 		return nil, err
 	}
 

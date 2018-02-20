@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS tx (
-    tx VARCHAR (2000),
-    StatusID INTEGER ,
-);

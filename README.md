@@ -1,6 +1,8 @@
 # anzu-chain
 [![Build Status](https://travis-ci.org/InvincibleMan/anzu-chain.svg?branch=master)](https://travis-ci.org/InvincibleMan/anzu-chain)
 
+### きらりちゃん可愛い
+
 ## using docker-compose
 ```
 $ docker-compose up

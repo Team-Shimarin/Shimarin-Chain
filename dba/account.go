@@ -16,7 +16,7 @@ const initalbalance = 100
 func (a *AccountAccess) Register(account *model.Account) error {
 	_, err := squirrel.Insert(model.AccountTable).
 		Columns("id", "publickey", "balance").
-		Values(account.ID, account.PublicKey, initalbalance).
+		Values(account.ID, initalbalance).
 		RunWith(db).
 		Exec()
 	if err != nil {
@@ -53,6 +53,24 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 	return nil
 }
 
+func (a *AccountAccess) GetBalance(accountid string, addbalance int64) (int64, error) {
+	// accountテーブルからBalanceを取得
+	sql, args, err := squirrel.Select("balance").
+		From(model.AccountTable).
+		Where("id == " + accountid).
+		ToSql()
+	if err != nil {
+		return 0, err
+	}
+	account := model.Account{}
+	if err := db.QueryRow(sql, args...).Scan(&account); err != nil {
+		return 0, err
+	}
+
+	balance := account.Balance
+
+	return balance, nil
+}
 
 func (a *AccountAccess) GetIDFromRedis(publicKey string, rc redis.Conn)(string, error){
 	// RedisのKVCからAccountIDを取得
@@ -63,17 +81,4 @@ func (a *AccountAccess) GetIDFromRedis(publicKey string, rc redis.Conn)(string, 
 	var account model.Account
 	json.Unmarshal([]byte(accontjsonraw), account)
 	return account.ID, nil
-}
-
-func (a *AccountAccess) UpdataHP(accountid string, hp int64) error {
-	// HPをアップデート
-	_, err := squirrel.Update(model.AccountTable).Set(
-		"balance", hp).Where("id", accountid).Exec()
-	if err != nil {
-		if err.(sqlite3.Error).ExtendedCode == 2067 {
-			return ErrAlreadyExists
-		}
-		return err
-	}
-	return nil
 }

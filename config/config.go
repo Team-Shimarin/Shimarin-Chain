@@ -7,7 +7,8 @@ type Config struct {
 	MinorAccountID string `default:"root"` //NOTE: Root Account is generated GENESIS_BLOCK
 	RedisPort      string `default:"6379"`
 	RedisHost      string `default:"localhost"`
-	RedisNodeCount int    `default:4`
+	RedisNodeCount int    `default:"4"`
+	Diff           int64  `default:"1000"`
 }
 
 var config Config

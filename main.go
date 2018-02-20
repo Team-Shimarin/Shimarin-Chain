@@ -48,8 +48,6 @@ func main() {
 	myId := "hoge"
 	myhp := int64(100)
 	diff := int64(100)
-	/// 自分のアカウントを作成
-
 
 	go HashCalculate(c, myId, myhp, diff)
 	go ValidHashSubScribe(c)

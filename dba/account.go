@@ -41,7 +41,7 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 	}
 	nowbalance := account.Balance
 	_, err = squirrel.Update(model.AccountTable).Set(
-			"balance", nowbalance + addbalance).Where("id", accountid).Exec()
+		"balance", nowbalance + addbalance).Where("id", accountid).Exec()
 	if err != nil {
 		if err.(sqlite3.Error).ExtendedCode == 2067 {
 			return ErrAlreadyExists
@@ -49,5 +49,17 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 		return err
 	}
 	return nil
+}
 
+func (a *AccountAccess) UpdataHP(accountid string, hp int64) error {
+	// HPをアップデート
+	_, err := squirrel.Update(model.AccountTable).Set(
+		"balance", hp).Where("id", accountid).Exec()
+	if err != nil {
+		if err.(sqlite3.Error).ExtendedCode == 2067 {
+			return ErrAlreadyExists
+		}
+		return err
+	}
+	return nil
 }

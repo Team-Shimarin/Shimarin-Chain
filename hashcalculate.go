@@ -62,10 +62,10 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 
 			timestamp := time.Now().Unix()
 			prevhash := getPrevHash()
-			prev_block := makePrev_block(prevhash, myid)
+			sha256raw := makePrev_block(prevhash, myid)
 			// ハッシュ計算が完了
 			// TxPoolをPrev_TxPoolに移す
-			if hash.IsOKHash(myhp, diff, prev_block) {
+			if hash.IsOKHash(myhp, diff, sha256raw) {
 				// txPoolを削除
 				c.Do("SET", txPoolKey, "")
 				// Prev_tx_poolに移す

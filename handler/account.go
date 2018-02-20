@@ -22,9 +22,9 @@ func NewAccountHandler(conf *config.Config, accountAccess dba.AccountAccess) *Ac
 }
 
 func (a *AccountHandler) Register(c *gin.Context) {
-	publicKey := c.Param("publickey")
+	publickey := c.Query("publickey")
 
-	_, _ = model.NewAccount(publicKey)
+	_, _ = model.NewAccount(publickey)
 
 	// TODO: RedisのKVSにJSONでぶち込む
 

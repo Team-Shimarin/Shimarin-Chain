@@ -62,6 +62,8 @@ func ValidHashSubScribe() {
 			} else {
 				continue
 			}
+		case redis.Subscription:
+			fmt.Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
 		default:
 			log.Printf("error when psc.Receive switch-case in validHashSubScribe: %v", v)
 		}

@@ -23,5 +23,9 @@ def make_request():
 
 if __name__ == "__main__":
     while(True):
-        make_request()
-        sleep(random.randrange(10, 15))
+        try:
+            print("Connect")
+            make_request()
+            sleep(random.randrange(10, 15))
+        except as e:
+            print("Failed To Connect", e)

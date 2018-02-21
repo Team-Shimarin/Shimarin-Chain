@@ -7,6 +7,7 @@ migrate-up:
 	sqlite3 db/sqlite3.db < migrate/account.sql
 	sqlite3 db/sqlite3.db < migrate/block.sql
 	sqlite3 db/sqlite3.db < migrate/tx.sql
+	sqlite3 db/sqlite3.db < migrate/health.sql
 
 migrate-down:
 	echo "" > db/sqlite3.db
@@ -16,4 +17,5 @@ insert-dummy:
 
 build:
 	GOOS=linux GOARCH=amd64 go build -o ./bin/anzu-chain *.go
+
 

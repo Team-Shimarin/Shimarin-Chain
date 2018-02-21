@@ -1,11 +1,21 @@
 package model
 
+import  (
+	"github.com/InvincibleMan/anzu-chain/tx"
+)
+
+// Block
+// { prev_hash, txs, CreateID, hash, timestamp}
+// txs [{To, From, Value}]
+
 type Block struct {
 	PrevHash string
-	// TODO : Txs の定義が終わり次第修正
+	txs []tx.Tx
 	CreatorID string
 	Timestamp int64
-	MyHash    string
+	Hash    string
 }
+
+
 
 const BlockTable = "block"

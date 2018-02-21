@@ -18,3 +18,20 @@ func (a *AccountAccess) UpdataHP(accountid string, hp int64) error {
 	}
 	return nil
 }
+
+func (a *AccountAccess) GetHealth(accountid string) (*model.Health, error) {
+	// HPを取得
+	sql, args, err := squirrel.Select("*").
+		From(model.HealthTable).Where("account_id", accountid).
+		ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	account := model.Health{}
+	if err := db.QueryRow(sql, args...).Scan(&account.Accout_id,&account.Hp, &account.Id); err != nil {
+		return nil, err
+	}
+
+	return &account, nil
+}

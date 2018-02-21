@@ -10,7 +10,7 @@ import  (
 
 type Block struct {
 	PrevHash string
-	txs []tx.Tx
+	Txs []tx.Tx
 	CreatorID string
 	Timestamp int64
 	Hash    string

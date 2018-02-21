@@ -40,7 +40,17 @@ func main() {
 	accountHandler := handler.NewAccountHandler(conf, dba.AccountAccess{})
 
 	r.POST("/api/v1/register", accountHandler.Register)
-	// HPの受け入れエンドポイント
+	// HP更新
+	// req {id: accountid, hp: healthpoint}
 	r.POST("/api/v1/account/healthpoint/update", accountHandler.UpdateHP)
+	// HPの取得
+	// req {id: accountid}
+	// res {hp: healthpoint}
+	r.POST("/api/v1/account/healthpoint/get", accountHandler.GetHP)
+	// Balanceの取得
+	// req {id: accountid}
+	// res {balance: balance}
+	r.POST("/api/v1/account/account/balance/get", accountHandler.GetBalance)
+a
 	r.Run(":8080")
 }

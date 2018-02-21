@@ -53,7 +53,7 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 	return nil
 }
 
-func (a *AccountAccess) GetBalance(accountid string, addbalance int64) (int64, error) {
+func (a *AccountAccess) GetBalance(accountid string) (int64, error) {
 	// accountテーブルからBalanceを取得
 	sql, args, err := squirrel.Select("balance").
 		From(model.AccountTable).

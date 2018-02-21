@@ -136,7 +136,7 @@ func makeBlock(txs string, creatorID string, timestamp int64, hash string) error
 			Txs:       []string{txs},
 			CreatorID: creatorID,
 			Timestamp: timestamp,
-			Hash:      string(hashpack.SHA256(hash)),
+			Hash:      fmt.Sprintf("%x", hashpack.SHA256(hash)),
 		},
 	)
 

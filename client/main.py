@@ -10,7 +10,7 @@ def get_sample():
 
 def make_request():
     ids = get_sample()
-    url = "http://shima1:8081/api/v1/balance/remit"
+    url = "http://shima1:8080/api/v1/balance/remit"
     param = [
         ( "to", ids[0]),
         ( "from", ids[1]),

@@ -27,5 +27,5 @@ if __name__ == "__main__":
             print("Connect")
             make_request()
             sleep(random.randrange(10, 15))
-        except as e:
+        except:
             print("Failed To Connect", e)

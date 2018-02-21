@@ -31,11 +31,11 @@ func (a *BlockAccess) GetLatestBlock() (*model.Block, error) {
 	}
 	log.Println(sql, args)
 	block := model.Block{}
-	row, err := db.Query(sql)
-	if err != nil{
-		log.Print(err)
-		return nil, err
-	}
+	//row, err := db.Query(sql)
+	//if err != nil{
+	//	log.Print(err)
+	//	return nil, err
+	//}
 	if err := db.QueryRow(sql, args...).Scan(&block.PrevHash, &block.Txs, &block.CreatorID, &block.Hash, &block.Timestamp); err != nil {
 		return nil, err
 	}

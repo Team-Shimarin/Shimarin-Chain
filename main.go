@@ -11,6 +11,7 @@ import (
 	"github.com/InvincibleMan/anzu-chain/handler"
 	anzuredis "github.com/InvincibleMan/anzu-chain/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/InvincibleMan/anzu-chain/model"
 )
 
 const (
@@ -25,6 +26,19 @@ func main() {
 	log.Println("Anzu Wake Up")
 	conf := config.GetConfig()
 	log.Print(conf)
+
+	// accout Create
+	accountaccess := dba.AccountAccess{}
+	account, err := model.NewAccount()
+	if err != nil{
+		log.Println("failed to create newaccount", err)
+	}
+	err = accountaccess.Register(account)
+	if err != nil {
+		log.Println("failed to create new account", err)
+	}else{
+		log.Println("success to create new account", account.ID)
+	}
 
 	r := gin.Default()
 	f, _ := os.Create("anzu-access.log")
@@ -54,7 +68,9 @@ func main() {
 	// Balanceの取得
 	// req {id: accountid}
 	// res {balance: balance}
-	r.POST("/api/v1/account/account/balance/get", accountHandler.GetBalance)
+	r.POST("/api/v1/account/balance/get", accountHandler.GetBalance)
 
-	r.Run(":8080")
+	// Blickを全て取得
+	r.GET("/api/v1/block/getall", accountHandler.GetBlock)
+	r.Run(":8081")
 }

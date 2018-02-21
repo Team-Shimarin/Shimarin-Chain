@@ -28,4 +28,4 @@ if __name__ == "__main__":
             make_request()
             sleep(random.randrange(10, 15))
         except:
-            print("Failed To Connect", e)
+            print("Failed To Connect")

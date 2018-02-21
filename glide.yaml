@@ -5,6 +5,7 @@ import:
   subpackages:
   - redis
 - package: github.com/gin-gonic/gin
+- package: github.com/k0kubun/pp
 - package: github.com/kelseyhightower/envconfig
 - package: github.com/mattn/go-sqlite3
 - package: github.com/satori/go.uuid

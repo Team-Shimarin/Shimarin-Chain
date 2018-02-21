@@ -33,20 +33,22 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 	conf := config.GetConfig()
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
 	if err != nil {
-		log.Fatalf("Dead HashCalculate Goroutine because %v", err)
+		log.Print("Dead HashCalculate Goroutine because %v", err)
+		panic(err)
 	}
 	defer c.Close()
 	log.Println("HashCalculate: connected to redis")
 	//　1秒毎にハッシュ計算
 	for {
 		time.Sleep(1 * time.Second)
-		all_tx, err := redis.String(c.Do("GET", TxPoolKey))
+		all_tx, err := redis.String(c.Do("GET", txPoolKey))
 		if err == redis.ErrNil {
 			all_tx = ""
 			err = nil
 		}
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
+			panic(err)
 		}
 		if len(all_tx) == 0 {
 			log.Printf("HashCalculate: nothing Tx in TxPool at %v", time.Now().Unix())
@@ -63,14 +65,13 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 			if hash.IsOKHash(myhp, diff, sha256raw) {
 				log.Printf("HashCalculate: success! hashcalc at %v", time.Now().Unix())
 				// txPoolを削除
-				c.Do("SET", TxPoolKey, "")
-				// Prev_tx_poolに移す
-				c.Do("SET", PrevTxPoolKey, all_tx)
+				c.Do("SET", txPoolKey, "[]")
 				// all_txをあんまーしゃるする
 				jsonAllTx := make([]tx.Tx, 0)
 				log.Print(all_tx)
 				if err := json.Unmarshal([]byte(all_tx), &jsonAllTx); err != nil {
-					log.Fatal(err)
+					log.Print(err)
+					panic(err)
 				}
 				// 報酬金のトランザクション
 				sa_tx := tx.Tx{
@@ -82,7 +83,8 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 				// json 化
 				jBytes, err := json.Marshal(jsonAllTx)
 				if err != nil {
-					log.Fatal("cannnot marshal")
+					log.Print("cannnot marshal")
+					panic(err)
 				}
 				// CreatorID, Timestamp,　を付与して送信
 				js := struct {
@@ -96,9 +98,15 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 					Txs:       string(jBytes),
 					HP:        myhp,
 				}
+				// json 化
+				jjBytes, err := json.Marshal(js)
+				if err != nil {
+					log.Print("cannnot marshal")
+					panic(err)
+				}
 				// ValidHashにpublish
-				c.Do("PUBLISH", ValidHashChan, js)
-				c.Do("SET", TxPoolKey, "")
+				c.Do("PUBLISH", validHashChan, string(jjBytes))
+				c.Do("SET", txPoolKey, "[]")
 			} else {
 				log.Printf("HashCalculate: missing PoH! at %v", time.Now().Unix())
 			}

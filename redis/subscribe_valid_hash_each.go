@@ -9,12 +9,12 @@ import (
 	"github.com/InvincibleMan/anzu-chain/model"
 	"github.com/InvincibleMan/anzu-chain/tx"
 	"github.com/garyburd/redigo/redis"
+	"github.com/k0kubun/pp"
 )
 
-const ValidHashEachChan = "validHashEach"
-const ValidHashChan = "validHash"
-const PrevTxPoolKey = "prev_TxPool"
-const TxPoolKey = "TxPool"
+const validHashEachChan = "validHashEach"
+const validHashChan = "validHash"
+const txPoolKey = "TxPool"
 
 func SubscribeValidHashEach() {
 	log.Println("subscribeValidHashEach: Goroutine Start")
@@ -24,13 +24,14 @@ func SubscribeValidHashEach() {
 	// redis connection
 	c, err := getRedisConn(conf.RedisHost, conf.RedisPort)
 	if err != nil {
-		log.Fatalf("Dead subscribe_valid_hash_each Goroutine because %v", err)
+		log.Printf("Dead subscribe_valid_hash_each Goroutine because %v", err)
+		panic(err)
 	}
 	defer c.Close()
 	log.Println("subscribeValidHashEach: conected to redis")
 
 	psc := redis.PubSubConn{Conn: c}
-	psc.Subscribe(ValidHashEachChan)
+	psc.Subscribe(validHashEachChan)
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
@@ -80,18 +81,13 @@ func SubscribeValidHashEach() {
 
 			if approveCnt[data.data] > N/2 {
 				// tx実行
+				pp.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 				if err := executeTxs(txs); err != nil {
 					log.Print(err)
 					continue
 				}
 
 				if err := makeBlock(jsonData.txs, jsonData.creatorId, jsonData.timestamp); err != nil {
-					log.Print(err)
-					continue
-				}
-
-			} else if rejectCnt[data.data] > N/2 && conf.MinorAccountID == jsonData.creatorId {
-				if err := backTxPool(c, txs); err != nil {
 					log.Print(err)
 					continue
 				}
@@ -138,59 +134,11 @@ func executeTx(transaction *tx.Tx) error {
 	return err
 }
 
-func backTxPool(c redis.Conn, txs []*tx.Tx) error {
-	// 一番ケツのTxのCreator(報酬生成Txなので)を見て、それが自分のIDなら、
-	// TxPoolの先頭にprev_TxPoolを差し込み、prev_TxPoolを空にする
-	// prevもってくる
-	prevPool, err := redis.Bytes(c.Do("GET", PrevTxPoolKey))
-	if err == redis.ErrNil {
-		err = nil
-		prevPool = []byte("")
-	}
-	if err != nil {
-		return err
-	}
-	// prevに空文字入れる
-	if _, err := c.Do("SET", PrevTxPoolKey, ""); err != nil {
-		return err
-	}
-	// txpoolもってくる
-	txPool, err := redis.Bytes(c.Do("GET", TxPoolKey))
-	if err == redis.ErrNil {
-		err = nil
-		txPool = []byte("")
-	}
-	if err != nil {
-		return err
-	}
-	// アンマーシャルする
-	prevTx := make([]*tx.Tx, 0, 100)
-	if err := json.Unmarshal(prevPool, &prevTx); err != nil {
-		return err
-	}
-	poolTx := make([]*tx.Tx, 0, 100)
-	if err := json.Unmarshal(txPool, &poolTx); err != nil {
-		return err
-	}
-	// 頭につける
-	newTxs := append(poolTx, prevTx...)
-	// マーシャルする
-	newTxsJson, err := json.Marshal(newTxs)
-	if err != nil {
-		return err
-	}
-	// txpoolに入れる
-	if _, err := c.Do("SET", TxPoolKey, string(newTxsJson)); err != nil {
-		return err
-	}
-	return nil
-}
-
 // RedisからJSONのTxsを取得するFunc
 func getTxsJSON(c redis.Conn) ([]byte, error) {
-	bs, err := redis.Bytes(c.Do("GET", PrevTxPoolKey))
+	bs, err := redis.Bytes(c.Do("GET", txPoolKey))
 	if err == redis.ErrNil {
-		return []byte(""), nil
+		return []byte("[]"), nil
 	}
 	return bs, err
 }

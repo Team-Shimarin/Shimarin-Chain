@@ -1,5 +1,5 @@
-hash: 2c7b0c2826d6144625c56fa6726b2de6d2401e7dc7d2d75029722b90fc3d41f2
-updated: 2018-02-19T20:17:47.024907298+09:00
+hash: a9c4931cac453e5372720c9744eac37bfe7078d1d7a2ecfcf339deee1fdbf890
+updated: 2018-02-21T19:42:10.438285237+09:00
 imports:
 - name: github.com/garyburd/redigo
   version: d1ed5c67e5794de818ea85e6b522fda02623a484
@@ -20,6 +20,8 @@ imports:
   - proto
 - name: github.com/json-iterator/go
   version: e7c7f3b33712573affdcc7a107218e7926b9a05b
+- name: github.com/k0kubun/pp
+  version: e057ee7a28277be4d2af303443b6da377768181f
 - name: github.com/kelseyhightower/envconfig
   version: 462fda1f11d8cad3660e52737b8beefd27acfb3f
 - name: github.com/lann/builder
@@ -28,6 +30,8 @@ imports:
   version: 62de8c46ede02a7675c4c79c84883eb164cb71e3
 - name: github.com/Masterminds/squirrel
   version: f3d8be4a3bca69543a71773c54dc7b44837ba14c
+- name: github.com/mattn/go-colorable
+  version: 7dc3415be66d7cc68bf0182f35c8d31f8d2ad8a7
 - name: github.com/mattn/go-isatty
   version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/mattn/go-sqlite3

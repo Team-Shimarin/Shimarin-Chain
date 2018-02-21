@@ -1,5 +1,7 @@
 # しまりんちぇーん
 
+[![Build Status](https://travis-ci.org/Team-Shimarin/Shimarin-Chain.svg?branch=master)](https://travis-ci.org/Team-Shimarin/Shimarin-Chain)
+
 ![](./img/shimarin.jpg)
 
 ## using docker-compose

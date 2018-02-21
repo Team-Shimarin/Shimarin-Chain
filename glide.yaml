@@ -1,6 +1,15 @@
 package: github.com/InvincibleMan/anzu-chain
 import:
 - package: github.com/Masterminds/squirrel
+- package: github.com/Team-Shimarin/Shimarin-Chain
+  subpackages:
+  - config
+  - dba
+  - handler
+  - hash
+  - model
+  - redis
+  - tx
 - package: github.com/garyburd/redigo
   subpackages:
   - redis

@@ -6,10 +6,10 @@ import (
 
 	"log"
 
-	"github.com/InvincibleMan/anzu-chain/config"
-	"github.com/InvincibleMan/anzu-chain/dba"
-	"github.com/InvincibleMan/anzu-chain/handler"
-	anzuredis "github.com/InvincibleMan/anzu-chain/redis"
+	"github.com/Team-Shimarin/Shimarin-Chain/config"
+	"github.com/Team-Shimarin/Shimarin-Chain/dba"
+	"github.com/Team-Shimarin/Shimarin-Chain/handler"
+	anzuredis "github.com/Team-Shimarin/Shimarin-Chain/redis"
 	"github.com/gin-gonic/gin"
 )
 

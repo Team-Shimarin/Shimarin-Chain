@@ -1,9 +1,9 @@
 package dba
 
 import (
-	"github.com/InvincibleMan/anzu-chain/model"
-	"github.com/InvincibleMan/anzu-chain/tx"
 	"github.com/Masterminds/squirrel"
+	"github.com/Team-Shimarin/Shimarin-Chain/model"
+	"github.com/Team-Shimarin/Shimarin-Chain/tx"
 )
 
 type AccountAccess struct{}

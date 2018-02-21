@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/InvincibleMan/anzu-chain/config"
-	"github.com/InvincibleMan/anzu-chain/dba"
-	hashpack "github.com/InvincibleMan/anzu-chain/hash"
-	"github.com/InvincibleMan/anzu-chain/model"
-	"github.com/InvincibleMan/anzu-chain/tx"
+	"github.com/Team-Shimarin/Shimarin-Chain/config"
+	"github.com/Team-Shimarin/Shimarin-Chain/dba"
+	hashpack "github.com/Team-Shimarin/Shimarin-Chain/hash"
+	"github.com/Team-Shimarin/Shimarin-Chain/model"
+	"github.com/Team-Shimarin/Shimarin-Chain/tx"
 	"github.com/garyburd/redigo/redis"
 	"github.com/k0kubun/pp"
 )

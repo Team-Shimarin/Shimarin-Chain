@@ -9,20 +9,20 @@ RUN apk --no-cache add ca-certificates openssl && \
 RUN apk update \
     && apk add sqlite \
     && apk add socat
-WORKDIR /anzu-chain
+WORKDIR /shima-chain
 COPY ./bin ./bin
 
-RUN mkdir /anzu-chain/db
-RUN touch /anzu-chain/db/sqlite3.db
-RUN chmod 777 /anzu-chain/
-RUN chmod 777 /anzu-chain/db/
-RUN chmod 777 /anzu-chain/db/sqlite3.db
+RUN mkdir /shima-chain/db
+RUN touch /shima-chain/db/sqlite3.db
+RUN chmod 777 /shima-chain/
+RUN chmod 777 /shima-chain/db/
+RUN chmod 777 /shima-chain/db/sqlite3.db
 
 ADD migrate/ /migrate
-RUN sqlite3 /anzu-chain/db/sqlite3.db < /migrate/account.sql
-RUN sqlite3 /anzu-chain/db/sqlite3.db < /migrate/block.sql
-RUN sqlite3 /anzu-chain/db/sqlite3.db < /migrate/health.sql
-RUN sqlite3 /anzu-chain/db/sqlite3.db < /migrate/tx.sql
-RUN sqlite3 /anzu-chain/db/sqlite3.db < /migrate/dummy.sql
+RUN sqlite3 /shima-chain/db/sqlite3.db < /migrate/account.sql
+RUN sqlite3 /shima-chain/db/sqlite3.db < /migrate/block.sql
+RUN sqlite3 /shima-chain/db/sqlite3.db < /migrate/health.sql
+RUN sqlite3 /shima-chain/db/sqlite3.db < /migrate/tx.sql
+RUN sqlite3 /shima-chain/db/sqlite3.db < /migrate/dummy.sql
 
-CMD /anzu-chain/bin/anzu-chain
+CMD /shima-chain/bin/shima-chain

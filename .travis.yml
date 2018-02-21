@@ -9,10 +9,10 @@ before_install:
 
 script:
     - glide install
-    - go build -o ./bin/anzu-chain *.go
+    - go build -o ./bin/shima-chain *.go
     - export D_TAG=latest
     - if [ $TRAVIS_BRANCH != 'master' ]; then export D_TAG=`echo $TRAVIS_BRANCH | sed -e 's/\//-/g'`; fi
-    - docker build ./ --tag=${D_USER}/anzu-chain:$D_TAG
+    - docker build ./ --tag=${D_USER}/shima-chain:$D_TAG
     - docker login -u $D_USER -p $D_PASS
-    - docker push ${D_USER}/anzu-chain:$D_TAG
+    - docker push ${D_USER}/shima-chain:$D_TAG
  

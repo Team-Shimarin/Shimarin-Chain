@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/InvincibleMan/anzu-chain/config"
-	"github.com/InvincibleMan/anzu-chain/dba"
-	"github.com/InvincibleMan/anzu-chain/hash"
-	"github.com/InvincibleMan/anzu-chain/tx"
+	"github.com/Team-Shimarin/Shimarin-Chain/config"
+	"github.com/Team-Shimarin/Shimarin-Chain/dba"
+	"github.com/Team-Shimarin/Shimarin-Chain/hash"
+	"github.com/Team-Shimarin/Shimarin-Chain/tx"
 	"github.com/garyburd/redigo/redis"
 )
 

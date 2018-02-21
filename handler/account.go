@@ -7,10 +7,10 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/InvincibleMan/anzu-chain/config"
-	"github.com/InvincibleMan/anzu-chain/dba"
-	anzuredis "github.com/InvincibleMan/anzu-chain/redis"
-	"github.com/InvincibleMan/anzu-chain/tx"
+	"github.com/Team-Shimarin/Shimarin-Chain/config"
+	"github.com/Team-Shimarin/Shimarin-Chain/dba"
+	anzuredis "github.com/Team-Shimarin/Shimarin-Chain/redis"
+	"github.com/Team-Shimarin/Shimarin-Chain/tx"
 	"github.com/gin-gonic/gin"
 )
 

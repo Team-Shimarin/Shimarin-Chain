@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/InvincibleMan/anzu-chain/model"
 	"github.com/Masterminds/squirrel"
+	"github.com/Team-Shimarin/Shimarin-Chain/model"
 )
 
 type BlockAccess struct{}

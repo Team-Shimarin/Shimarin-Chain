@@ -1,11 +1,15 @@
 package model
 
+// Block
+// { prev_hash, txs, CreateID, hash, timestamp}
+// txs [{To, From, Value}]
+
 type Block struct {
 	PrevHash string
-	// TODO : Txs の定義が終わり次第修正
+	Txs []string
 	CreatorID string
+	Hash    string
 	Timestamp int64
-	MyHash    string
 }
 
 const BlockTable = "block"

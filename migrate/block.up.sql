@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS block (
-    prev_hash VARCHAR (2000),
-    txs VARCHAR (2000),
-    hash VARCHAR (2000),
-    TIMESTAMP INTEGER ,
-);

@@ -1,7 +1,9 @@
 package model
 
 type Health struct {
-	id        int
-	accout_id string
-	hp        int
+	Id        int
+	Accout_id string
+	Hp        int
 }
+
+const HealthTable = "health"

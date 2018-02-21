@@ -1,6 +1,8 @@
 package model
 
-import uuid "github.com/satori/go.uuid"
+import (
+	uuid "github.com/satori/go.uuid"
+)
 
 type Account struct {
 	ID      string

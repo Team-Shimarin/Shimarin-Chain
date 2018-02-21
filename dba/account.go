@@ -15,8 +15,8 @@ const initalbalance = 100
 
 func (a *AccountAccess) Register(account *model.Account) error {
 	_, err := squirrel.Insert(model.AccountTable).
-		Columns("id", "publickey", "balance").
-		Values(account.ID, initalbalance).
+		Columns("id", "balance").
+		Values(account.ID, account.Balance).
 		RunWith(db).
 		Exec()
 	if err != nil {
@@ -32,7 +32,7 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 	// DBから現在のbalanceを取得、追加するbalanceを計算し、UPDATE
 	sql, args, err := squirrel.Select("balance").
 		From(model.AccountTable).
-		Where("id == " + accountid).
+		Where("id == '" + accountid + "'").
 		ToSql()
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (a *AccountAccess) UpdataBalance(accountid string, addbalance int64) error 
 	return nil
 }
 
-func (a *AccountAccess) GetBalance(accountid string, addbalance int64) (int64, error) {
+func (a *AccountAccess) GetBalance(accountid string) (int64, error) {
 	// accountテーブルからBalanceを取得
 	sql, args, err := squirrel.Select("balance").
 		From(model.AccountTable).

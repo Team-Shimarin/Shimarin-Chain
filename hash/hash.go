@@ -1,22 +1,23 @@
 package hash
 
 import (
-	"math/big"
-	"errors"
-	"strconv"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
+	"fmt"
 	"log"
+	"math/big"
+	"strconv"
 )
 
-func SHAtoBigNum(sha string) (*big.Int, error){
-	if len(sha) != 64{
+func SHAtoBigNum(sha string) (*big.Int, error) {
+	if len(sha) != 64 {
 		return nil, errors.New("sha must be 64 length")
 	}
 	big_sum := big.NewInt(0)
-	for i := 0; i < 64; i+= 8{
-		i64, err := strconv.ParseInt(sha[i: i+8], 16, 64)
-		if err != nil{
+	for i := 0; i < 64; i += 8 {
+		i64, err := strconv.ParseInt(sha[i:i+8], 16, 64)
+		if err != nil {
 			log.Print(err)
 		}
 
@@ -62,9 +63,11 @@ func IsOKHash(hp int64, diff int64, blockword string) bool {
 	exsha := SHA256(blockword)
 	// fmt.Println(exsha)
 	result_exsha, err := SHAtoBigNum(hex.EncodeToString(exsha))
-	if err != nil{
+	if err != nil {
 		log.Print(err)
 	}
+
+	log.Print(fmt.Sprint(threshold))
 
 	return 0 <= threshold.Cmp(result_exsha)
 }

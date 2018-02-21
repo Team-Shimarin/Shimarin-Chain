@@ -3,14 +3,15 @@ package main
 import (
 	"io"
 	"os"
-	"time"
+
+	"log"
 
 	"github.com/InvincibleMan/anzu-chain/config"
 	"github.com/InvincibleMan/anzu-chain/dba"
 	"github.com/InvincibleMan/anzu-chain/handler"
-	"github.com/garyburd/redigo/redis"
+	anzuredis "github.com/InvincibleMan/anzu-chain/redis"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/InvincibleMan/anzu-chain/model"
 )
 
 const (
@@ -24,40 +25,61 @@ func main() {
 	// get config
 	log.Println("Anzu Wake Up")
 	conf := config.GetConfig()
-	// redis connection
-	var c redis.Conn
-	var err error
-	for i := 0; i < 200; i++ {
-		c, err = redis.Dial("tcp", conf.RedisHost + ":" + conf.RedisPort)
-		if err != nil {
-			log.Printf("%s:%s", conf.RedisHost, conf.RedisPort)
-			log.Printf(err.Error())
-			log.Printf("redis connection: retry cnt %d", i)
-			time.Sleep(1 * time.Second)
-			continue
-		}
-		break
-	}
-	defer c.Close()
+	log.Print(conf)
 
+	myhp := int64(100) // TODO: dbaから取る
+
+
+	// accout Create
+	accountaccess := dba.AccountAccess{}
+	account, err := model.NewAccount()
+	if err != nil{
+		log.Println("failed to create newaccount", err)
+	}
+	err = accountaccess.Register(account)
+	if err != nil {
+		log.Println("failed to create new account", err)
+	}else{
+		log.Println("success to create new account", account.ID)
+	}
+	err = accountaccess.InsertHealth(account, myhp)
+	if err != nil{
+		log.Println(err)
+	}
 	r := gin.Default()
 	f, _ := os.Create("anzu-access.log")
 	gin.DefaultWriter = io.MultiWriter(f)
 	r.Use(gin.Logger())
 
-	myId := "hoge"
-	myhp := int64(100)
-	diff := int64(100)
 
-	go HashCalculate(c, myId, myhp, diff)
-	go ValidHashSubScribe(c)
-	// NOTE: SUBSCRIBE VALID_HASH_EACH
-	go subscribeValidHashEach(c)
+	go anzuredis.HashCalculate(conf.MinorAccountID, myhp, conf.Diff)
+	go anzuredis.ValidHashSubScribe()
+	go anzuredis.SubscribeValidHashEach()
 
 	accountHandler := handler.NewAccountHandler(conf, dba.AccountAccess{})
 
+	// Redister
 	r.POST("/api/v1/register", accountHandler.Register)
-	// HPの受け入れエンドポイント
+
+	// HP更新
+	// req {id: accountid, hp: healthpoint}
 	r.POST("/api/v1/account/healthpoint/update", accountHandler.UpdateHP)
-	r.Run(":8080")
+
+	// HPの取得
+	// req {id: accountid}
+	// res {hp: healthpoint}
+	r.POST("/api/v1/account/healthpoint/get", accountHandler.GetHP)
+
+	// Balanceの取得
+	// req {id: accountid}
+	// res {balance: balance}
+	r.POST("/api/v1/account/balance/get", accountHandler.GetBalance)
+
+	// Blockを全て取得
+	r.GET("/api/v1/block/getall", accountHandler.GetBlock)
+
+	// 送金
+	r.POST("/api/v1/balance/remit", accountHandler.Remit)
+
+	r.Run(":8081")
 }

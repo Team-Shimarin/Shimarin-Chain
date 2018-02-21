@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-    shima-chain-1:
+    shima1:
         container_name: shima1
         image: invincibleman/shima-chain
         ports:
@@ -14,7 +14,7 @@ services:
             ANZU_REDISHOST: ena
             ANZU_REDISPORT: 6379
 
-    shima-chain-2:
+    shima2:
         container_name: shima2
         image: invincibleman/shima-chain
         ports:
@@ -27,7 +27,7 @@ services:
             ANZU_REDISHOST: ena
             ANZU_REDISPORT: 6379
 
-    shima-chain-3:
+    shima3:
         container_name: shima3
         image: invincibleman/shima-chain
         ports:
@@ -40,7 +40,7 @@ services:
             ANZU_REDISHOST: ena
             ANZU_REDISPORT: 6379
 
-    shima-chain-4:
+    shima4:
         container_name: shima4
         image: invincibleman/shima-chain
         ports:
@@ -58,4 +58,13 @@ services:
         ports:
             - 6379:6379
         image: invincibleman/ena
+
+    client1:
+        container_name: shima-chain-client
+        image: invincibleman/shima-chain-client
+        depends_on:
+            - shima1
+            - shima2
+            - shima3
+            - shima4
 

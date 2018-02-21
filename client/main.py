@@ -14,7 +14,7 @@ def make_request():
     param = [
         ( "to", ids[0]),
         ( "from", ids[1]),
-        ( "value", random.randrange(100, 1000))
+        ( "value", random.randrange(10, 50))
     ]
     url += "?{0}".format( urllib.parse.urlencode( param))
     request = urllib.request.Request(url, method="POST")

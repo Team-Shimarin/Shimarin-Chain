@@ -1,48 +1,53 @@
 package dba
 
 import (
+	"encoding/json"
+	"log"
+
 	"github.com/InvincibleMan/anzu-chain/model"
 	"github.com/Masterminds/squirrel"
-	"fmt"
-	"log"
 )
 
 type BlockAccess struct{}
 
 func (a *BlockAccess) AddBlock(block *model.Block) error {
-	_, err := squirrel.Insert(model.BlockTable).
+	txJSON, err := json.Marshal(block.Txs)
+	if err != nil {
+		return err
+	}
+	txStrJSON := string(txJSON)
+
+	sql, args, err := squirrel.Insert(model.BlockTable).
 		Columns("prevhash", "txs", "creator_id", "timestamp", "hash").
-		Values(block.PrevHash, fmt.Sprint(block.Txs), block.CreatorID, block.Timestamp, block.Hash).
-		RunWith(db).
-		Exec()
+		Values(block.PrevHash, txStrJSON, block.CreatorID, block.Timestamp, block.Hash).
+		ToSql()
+
+	_, err = db.Exec(
+		sql,
+		args...,
+	)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (a *BlockAccess) GetLatestBlock() (*model.Block, error) {
-	sql, args, err := squirrel.Select("*").
+func (a *BlockAccess) GetLatestBlockHash() (string, error) {
+	sql, args, err := squirrel.Select("hash").
 		From(model.BlockTable).
-		Where("timestamp = (SELECT MAX(timestamp) FROM block)").
+		Where("timestamp IN (SELECT MAX(timestamp) FROM block)").
 		ToSql()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	log.Println(sql, args)
-	block := model.Block{}
-	//row, err := db.Query(sql)
-	//if err != nil{
-	//	log.Print(err)
-	//	return nil, err
-	//}
-	if err := db.QueryRow(sql, args...).Scan(&block.PrevHash, &block.Txs, &block.CreatorID, &block.Hash, &block.Timestamp); err != nil {
-		return nil, err
+	var res string
+	if err := db.QueryRow(sql, args...).Scan(&res); err != nil {
+		return "", err
 	}
-	return &block, nil
+	return res, nil
 }
 
-func (a *BlockAccess) GetAllBlock()(*model.Block, error){
+func (a *BlockAccess) GetAllBlock() (*model.Block, error) {
 	sql, args, err := squirrel.Select("*").
 		From(model.BlockTable).
 		ToSql()

@@ -67,7 +67,10 @@ func IsOKHash(hp int64, diff int64, blockword string) bool {
 		log.Print(err)
 	}
 
-	log.Print(fmt.Sprint(threshold))
+	log.Print("isOKHash", fmt.Sprint(threshold))
+	log.Print("isOKHash: ", result_exsha)
+	log.Print("isOKHash: ", threshold.Cmp(result_exsha))
+	log.Print("isOKHash: ", 0 <= threshold.Cmp(result_exsha))
 
 	return 0 <= threshold.Cmp(result_exsha)
 }

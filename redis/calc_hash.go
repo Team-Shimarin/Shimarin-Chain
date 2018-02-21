@@ -17,17 +17,18 @@ func makePrev_block(prevhash string, myid string) string {
 	return fmt.Sprintf("%s%s%s", prevhash, myid, time.Now().Unix())
 }
 
-func getPrevHash() string {
+func getPrevHash() (string, error) {
 	latest_block_ := &dba.BlockAccess{}
-	latest_block, err := latest_block_.GetLatestBlock()
+	hash, err := latest_block_.GetLatestBlockHash()
 	if err != nil {
-		log.Print(err)
+		return "", err
 	}
-	prevhash := latest_block.Hash
-	return prevhash
+	return hash, nil
 }
 
-func HashCalculate(myid string, myhp int64, diff int64) {
+func HashCalculate(myid string, diff int64) {
+	ha := dba.HealthAccess{}
+	myhp, _ := ha.GetHealth(config.GetConfig().MinorAccountID)
 	log.Println("HashCalculate: Goroutine Start")
 	// redis connection
 	conf := config.GetConfig()
@@ -50,19 +51,19 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 			log.Print(err)
 			panic(err)
 		}
-		if len(all_tx) == 0 {
+		if len(all_tx) <= 3 {
 			log.Printf("HashCalculate: nothing Tx in TxPool at %v", time.Now().Unix())
 			continue
 		} else { //Tx Poolが空じゃない
 			log.Printf("HashCalculate: Tx is exist in TxPool at %v", time.Now().Unix())
 			// ハッシュ計算
 			timestamp := time.Now().Unix()
-			prevhash := getPrevHash()
+			prevhash, _ := getPrevHash()
 			sha256raw := makePrev_block(prevhash, myid)
 			// ハッシュ計算が完了
 			// TxPoolをPrev_TxPoolに移す
 			log.Print(hash.IsOKHash(myhp, diff, sha256raw))
-			if hash.IsOKHash(myhp, diff, sha256raw) {
+			if hash.IsOKHash(myhp, diff, sha256raw) && len(all_tx) >= 3 {
 				log.Printf("HashCalculate: success! hashcalc at %v", time.Now().Unix())
 				// txPoolを削除
 				c.Do("SET", txPoolKey, "[]")
@@ -88,9 +89,9 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 				}
 				// CreatorID, Timestamp,　を付与して送信
 				js := struct {
-					CreatorID string `json:creator_id`
-					Timestamp int64  `json:timestamp`
-					Txs       string `json:txs`
+					CreatorID string `json:"creator_id"`
+					Timestamp int64  `json:"timestamp"`
+					Txs       string `json:"txs"`
 					HP        int64  `json:"hp"`
 				}{
 					CreatorID: myid,

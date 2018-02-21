@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/InvincibleMan/anzu-chain/config"
+	"github.com/InvincibleMan/anzu-chain/dba"
 	"github.com/InvincibleMan/anzu-chain/hash"
 	"github.com/garyburd/redigo/redis"
 )
@@ -35,26 +36,33 @@ func ValidHashSubScribe() {
 			if err := json.Unmarshal(v.Data, &publishedData); err != nil {
 				panic(err)
 			}
+			log.Print("validHashSubScribe: publishedData is ", publishedData)
 			if publishedData.Txs != "" {
 				// 計算!
-				prevHash := "" // TODO: dbaから取得
+				ba := dba.BlockAccess{}
+				prevHash, _ := ba.GetLatestBlockHash()
 				// hash.IsOKHash(publishedData.HP, conf.Diff, fmt.Sprintf("%s%s%s", prevHash, publishedData.CreatorID, publishedData.Timestamp))
 				//
 				data := struct {
-					isValid   bool   `json:"isValid"`
-					timestamp int64  `json:"timestamp"`
-					data      string `json:"data"`
+					IsValid   bool   `json:"isValid"`
+					Timestamp int64  `json:"timestamp"`
+					Data      string `json:"data"`
 				}{}
 				if hash.IsOKHash(publishedData.HP, conf.Diff, fmt.Sprintf("%s%s%s", prevHash, publishedData.CreatorID, publishedData.Timestamp)) {
 					// validhash each に true をpub
-					data.isValid = true
+					data.IsValid = true
 				} else {
 					// validhash each に falseをpub
-					data.isValid = false
+					data.IsValid = false
 				}
-				data.timestamp = time.Now().Unix()
-				data.data = string(v.Data)
-				c.Do("PUBLISH", validHashEachChan, data)
+				data.Timestamp = time.Now().Unix()
+				data.Data = string(v.Data)
+				bsJSON, err := json.Marshal(data)
+				if err != nil {
+					panic(err)
+				}
+				pubc, _ := getRedisConn(conf.RedisHost, conf.RedisPort)
+				pubc.Do("PUBLISH", validHashEachChan, string(bsJSON))
 			} else {
 				continue
 			}

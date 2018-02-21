@@ -8,4 +8,9 @@ INSERT INTO tx(tx, StatusID, Status) VALUES ('{"id":"anzu2", "publickey":"pubkey
 INSERT INTO tx(tx, StatusID, Status) VALUES ('{"id":"anzu3", "publickey":"pubkey_anzu3"}', 'ANZU003', 0);
 INSERT INTO tx(tx, StatusID, Status) VALUES ('{"id":"anzu4", "publickey":"pubkey_anzu4"}', 'ANZU004', 0);
 
-INSERT INTO block(prevhash, txs, creator_id, timestamp) VALUES ('zero', '[{"id":"anzu1", "publickey":"pubkey_anzu1"},{"id":"anzu2", "publickey":"pubkey_anzu2"},{"id":"anzu3", "publickey":"pubkey_anzu3"},{"id":"anzu4", "publickey":"pubkey_anzu4"}]', 'kami', 0);
+INSERT INTO block(prevhash, txs, creator_id, timestamp, hash) VALUES ('zero', '[{"id":"anzu1", "publickey":"pubkey_anzu1"},{"id":"anzu2", "publickey":"pubkey_anzu2"},{"id":"anzu3", "publickey":"pubkey_anzu3"},{"id":"anzu4", "publickey":"pubkey_anzu4"}]', 'kami', 0, 'GENESIS BLOCK HASH');
+
+INSERT INTO health(account_id, hp) VALUES ('anzu1', 25);
+INSERT INTO health(account_id, hp) VALUES ('anzu2', 50);
+INSERT INTO health(account_id, hp) VALUES ('anzu3', 10);
+INSERT INTO health(account_id, hp) VALUES ('anzu4', 90);

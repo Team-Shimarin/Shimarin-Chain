@@ -110,8 +110,7 @@ func makeBlock(txs string, creatorID string, timestamp int64) error {
 	if err != nil {
 		log.Println(err)
 	}
-	prevhash := latestblock.MyHash
-
+	prevhash := latestblock.Hash
 	return blockAccess.AddBlock(
 		&model.Block{
 			PrevHash:  prevhash,

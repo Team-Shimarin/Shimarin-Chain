@@ -84,11 +84,13 @@ func (a *AccountHandler) UpdateHP(c *gin.Context){
 }
 
 func (a *AccountHandler) GetHP(c *gin.Context) {
+	log.Println(c.Request.URL, " posted ", c.Query("id"))
 	id := c.Query("id")
 	accountaccess := dba.AccountAccess{}
 	healthmodel, err := accountaccess.GetHealth(id)
 	if err != nil{
 		log.Println(err)
+		c.String(http.StatusBadRequest,  fmt.Sprintln(err))
 	}
 	c.String(http.StatusOK, fmt.Sprint(healthmodel.Hp))
 }
@@ -101,4 +103,14 @@ func (a *AccountHandler) GetBalance(c *gin.Context) {
 		log.Println(err)
 	}
 	c.String(http.StatusOK, fmt.Sprint(balance))
+}
+
+func (a *AccountHandler) GetBlock(c *gin.Context){
+	blockaccsess := dba.BlockAccess{}
+	block, err := blockaccsess.GetAllBlock()
+	if err != nil{
+		log.Println(err)
+		c.String(http.StatusBadRequest, fmt.Sprintln(err))
+	}
+	c.String(http.StatusOK, fmt.Sprint(block))
 }

@@ -23,7 +23,7 @@ func getPrevHash() string {
 	if err != nil {
 		panic(err)
 	}
-	prevhash := latest_block.MyHash
+	prevhash := latest_block.Hash
 	return prevhash
 }
 

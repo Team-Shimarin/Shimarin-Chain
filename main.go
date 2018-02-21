@@ -27,6 +27,9 @@ func main() {
 	conf := config.GetConfig()
 	log.Print(conf)
 
+	myhp := int64(100) // TODO: dbaから取る
+
+
 	// accout Create
 	accountaccess := dba.AccountAccess{}
 	account, err := model.NewAccount()
@@ -39,13 +42,15 @@ func main() {
 	}else{
 		log.Println("success to create new account", account.ID)
 	}
-
+	err = accountaccess.InsertHealth(account, myhp)
+	if err != nil{
+		log.Println(err)
+	}
 	r := gin.Default()
 	f, _ := os.Create("anzu-access.log")
 	gin.DefaultWriter = io.MultiWriter(f)
 	r.Use(gin.Logger())
 
-	myhp := int64(100) // TODO: dbaから取る
 
 	go anzuredis.HashCalculate(conf.MinorAccountID, myhp, conf.Diff)
 	go anzuredis.ValidHashSubScribe()

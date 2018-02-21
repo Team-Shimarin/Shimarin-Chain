@@ -1,6 +1,6 @@
 # しまりんちぇーん
 
-
+![](./img/shimarin.jpg)
 
 ## using docker-compose
 ```

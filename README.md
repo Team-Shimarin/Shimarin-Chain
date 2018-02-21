@@ -1,20 +1,14 @@
-# anzu-chain
-[![Build Status](https://travis-ci.org/InvincibleMan/anzu-chain.svg?branch=master)](https://travis-ci.org/InvincibleMan/anzu-chain)
+# しまりんちぇーん
 
-### きらりちゃん可愛い
+
 
 ## using docker-compose
 ```
 $ docker-compose up
 ```
 
-run 4 `anzu-node` and  1 `kirarin-shower`.
+run 4 `shimarin-node` and  1 `ena(斎藤さん)`.
 
-`kirarin-shower` never have `any permissions` about `anzu-chain`.  
-So, `anzu-chain` is not centralized.  
-
-## ENDPOINT
-
-##### HPの更新
-> /api/v1/account/healthpoint/update
+`ena(斎藤さん)` never have `any permissions` about `shimarin-chain`.  
+So, `shimarin-chain` is not centralized.  
 

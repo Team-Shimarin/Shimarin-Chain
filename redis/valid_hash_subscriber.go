@@ -18,9 +18,9 @@ func ValidHashSubScribe() {
 	defer c.Close()
 	log.Println("ValidHashSubScribe: connected to redis")
 	psc := redis.PubSubConn{Conn: c}
-	err = psc.Subscribe(validHashChan)
+	err = psc.Subscribe(ValidHashChan)
 	if err != nil {
-		log.Print("error: subscribe ", validHashChan, ":because ", err)
+		log.Print("error: subscribe ", ValidHashChan, ":because ", err)
 	}
 	for {
 		switch v := psc.Receive().(type) {
@@ -54,7 +54,7 @@ func ValidHashSubScribe() {
 				}
 				data.timestamp = time.Now().Unix()
 				data.data = string(v.Data)
-				c.Do("PUBLISH", validHashEachChan, data)
+				c.Do("PUBLISH", ValidHashEachChan, data)
 			} else {
 				continue
 			}

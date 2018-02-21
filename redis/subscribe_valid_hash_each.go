@@ -11,10 +11,10 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-const validHashEachChan = "validHashEach"
-const validHashChan = "validHash"
-const prevTxPoolKey = "prev_TxPool"
-const txPoolKey = "TxPool"
+const ValidHashEachChan = "validHashEach"
+const ValidHashChan = "validHash"
+const PrevTxPoolKey = "prev_TxPool"
+const TxPoolKey = "TxPool"
 
 func SubscribeValidHashEach() {
 	log.Println("subscribeValidHashEach: Goroutine Start")
@@ -30,7 +30,7 @@ func SubscribeValidHashEach() {
 	log.Println("subscribeValidHashEach: conected to redis")
 
 	psc := redis.PubSubConn{Conn: c}
-	psc.Subscribe(validHashEachChan)
+	psc.Subscribe(ValidHashEachChan)
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
@@ -114,7 +114,7 @@ func makeBlock(txs string, creatorID string, timestamp int64) error {
 	return blockAccess.AddBlock(
 		&model.Block{
 			PrevHash:  prevhash,
-			Txs:       txs,
+			Txs:       []string{txs},
 			CreatorID: creatorID,
 			Timestamp: timestamp,
 		},
@@ -142,7 +142,7 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 	// 一番ケツのTxのCreator(報酬生成Txなので)を見て、それが自分のIDなら、
 	// TxPoolの先頭にprev_TxPoolを差し込み、prev_TxPoolを空にする
 	// prevもってくる
-	prevPool, err := redis.Bytes(c.Do("GET", prevTxPoolKey))
+	prevPool, err := redis.Bytes(c.Do("GET", PrevTxPoolKey))
 	if err == redis.ErrNil {
 		err = nil
 		prevPool = []byte("")
@@ -151,11 +151,11 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 		return err
 	}
 	// prevに空文字入れる
-	if _, err := c.Do("SET", prevTxPoolKey, ""); err != nil {
+	if _, err := c.Do("SET", PrevTxPoolKey, ""); err != nil {
 		return err
 	}
 	// txpoolもってくる
-	txPool, err := redis.Bytes(c.Do("GET", txPoolKey))
+	txPool, err := redis.Bytes(c.Do("GET", TxPoolKey))
 	if err == redis.ErrNil {
 		err = nil
 		txPool = []byte("")
@@ -180,7 +180,7 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 		return err
 	}
 	// txpoolに入れる
-	if _, err := c.Do("SET", txPoolKey, string(newTxsJson)); err != nil {
+	if _, err := c.Do("SET", TxPoolKey, string(newTxsJson)); err != nil {
 		return err
 	}
 	return nil
@@ -188,7 +188,7 @@ func backTxPool(c redis.Conn, txs []*tx.Tx) error {
 
 // RedisからJSONのTxsを取得するFunc
 func getTxsJSON(c redis.Conn) ([]byte, error) {
-	bs, err := redis.Bytes(c.Do("GET", prevTxPoolKey))
+	bs, err := redis.Bytes(c.Do("GET", PrevTxPoolKey))
 	if err == redis.ErrNil {
 		return []byte(""), nil
 	}

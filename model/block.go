@@ -6,10 +6,10 @@ package model
 
 type Block struct {
 	PrevHash string
-	Txs string
+	Txs []string
 	CreatorID string
-	Timestamp int64
 	Hash    string
+	Timestamp int64
 }
 
 const BlockTable = "block"

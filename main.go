@@ -75,7 +75,11 @@ func main() {
 	// res {balance: balance}
 	r.POST("/api/v1/account/balance/get", accountHandler.GetBalance)
 
-	// Blickを全て取得
+	// Blockを全て取得
 	r.GET("/api/v1/block/getall", accountHandler.GetBlock)
+
+	// 送金
+	r.POST("/api/v1/balance/remit", accountHandler.Remit)
+
 	r.Run(":8081")
 }

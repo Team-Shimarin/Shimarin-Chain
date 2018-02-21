@@ -21,7 +21,7 @@ func getPrevHash() string {
 	latest_block_ := &dba.BlockAccess{}
 	latest_block, err := latest_block_.GetLatestBlock()
 	if err != nil {
-		panic(err)
+		log.Print(err)
 	}
 	prevhash := latest_block.Hash
 	return prevhash
@@ -40,7 +40,7 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 	//　1秒毎にハッシュ計算
 	for {
 		time.Sleep(1 * time.Second)
-		all_tx, err := redis.String(c.Do("GET", txPoolKey))
+		all_tx, err := redis.String(c.Do("GET", TxPoolKey))
 		if err == redis.ErrNil {
 			all_tx = ""
 			err = nil
@@ -63,9 +63,9 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 			if hash.IsOKHash(myhp, diff, sha256raw) {
 				log.Printf("HashCalculate: success! hashcalc at %v", time.Now().Unix())
 				// txPoolを削除
-				c.Do("SET", txPoolKey, "")
+				c.Do("SET", TxPoolKey, "")
 				// Prev_tx_poolに移す
-				c.Do("SET", prevTxPoolKey, all_tx)
+				c.Do("SET", PrevTxPoolKey, all_tx)
 				// all_txをあんまーしゃるする
 				jsonAllTx := make([]tx.Tx, 0)
 				log.Print(all_tx)
@@ -97,8 +97,8 @@ func HashCalculate(myid string, myhp int64, diff int64) {
 					HP:        myhp,
 				}
 				// ValidHashにpublish
-				c.Do("PUBLISH", validHashChan, js)
-				c.Do("SET", txPoolKey, "")
+				c.Do("PUBLISH", ValidHashChan, js)
+				c.Do("SET", TxPoolKey, "")
 			} else {
 				log.Printf("HashCalculate: missing PoH! at %v", time.Now().Unix())
 			}

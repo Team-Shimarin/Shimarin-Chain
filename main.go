@@ -15,7 +15,10 @@ import (
 
 const (
 	systemId = "system"
+	inithp = 0
+	initbalance = 0
 )
+
 
 func main() {
 	// get config
@@ -37,5 +40,7 @@ func main() {
 	accountHandler := handler.NewAccountHandler(conf, dba.AccountAccess{})
 
 	r.POST("/api/v1/register", accountHandler.Register)
+	// HPの受け入れエンドポイント
+	r.POST("/api/v1/account/healthpoint/update", accountHandler.UpdateHP)
 	r.Run(":8080")
 }

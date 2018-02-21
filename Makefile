@@ -1,5 +1,5 @@
 cleandb:
-	rm -rf db/sqlite3.db
+	echo "" > ./db/sqlite3.db
 
 migrate-up:
 	if [ ! -d db ]; then mkdir db; fi

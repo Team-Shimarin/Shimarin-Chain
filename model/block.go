@@ -16,6 +16,4 @@ type Block struct {
 	Hash    string
 }
 
-
-
 const BlockTable = "block"
